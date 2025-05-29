@@ -8,6 +8,7 @@ public struct InAppView: View {
     var hasActionButtonRight: Bool = false
     var actionButtonLeft: () -> Void = {}
     var hasActionButtonLeft: Bool = false
+    var onDismissed: () -> Void = {}
     
     @State private var carousel: Int = 0
     @State private var backgroundImage: String = ""
@@ -18,12 +19,14 @@ public struct InAppView: View {
         actionButtonRight: @escaping () -> Void = {},
         hasActionButtonRight: Bool = false,
         actionButtonLeft: @escaping () -> Void = {},
-        hasActionButtonLeft: Bool = false) {
+        hasActionButtonLeft: Bool = false,
+        onDismissed: @escaping () -> Void = {}) {
             self.data = data
             self.actionButtonRight = actionButtonRight
             self.actionButtonLeft = actionButtonLeft
             self.hasActionButtonLeft = hasActionButtonLeft
             self.hasActionButtonRight = hasActionButtonRight
+            self.onDismissed = onDismissed
             
             if let aps = data["aps"] as? [String: Any],
                let inapp = aps["inapp"] as? [String: Any],
@@ -36,26 +39,43 @@ public struct InAppView: View {
     }
     
     public var body: some View {
-        if isShowing {
-            if carousel == 1 {
-                InAppRichContent(
-                    data: data ?? ["": ""],
-                    isActive: $isShowing,
-                    actionButtonLeft: actionButtonLeft,
-                    hasActionButtonLeft: hasActionButtonLeft,
-                    actionButtonRight: actionButtonRight,
-                    hasActionButtonRight: hasActionButtonRight)
-            } else if(!backgroundImage.isEmpty && carousel == 0){
-                InAppBackgroundImage(
-                    data: data ?? ["": ""],
-                    isActive: $isShowing,
-                    actionButtonLeft: actionButtonLeft,
-                    actionButtonRight: actionButtonRight)
-            } else {
-                InAppNormal(
-                    data: data ?? ["": ""],
-                    isActive: $isShowing)
+        Group {
+            if isShowing {
+                contentView()
             }
+        }
+        .onDisappear {
+            if !isShowing {
+                onDismissed()
+            }
+        }
+    }
+    
+    @ViewBuilder
+    private func contentView() -> some View {
+        if carousel == 1 {
+            InAppRichContent(
+                data: data ?? ["": ""],
+                isActive: $isShowing,
+                actionButtonLeft: actionButtonLeft,
+                hasActionButtonLeft: hasActionButtonLeft,
+                actionButtonRight: actionButtonRight,
+                hasActionButtonRight: hasActionButtonRight
+            )
+        } else if !backgroundImage.isEmpty && carousel == 0 {
+            InAppBackgroundImage(
+                data: data ?? ["": ""],
+                isActive: $isShowing,
+                actionButtonLeft: actionButtonLeft,
+                actionButtonRight: actionButtonRight
+            )
+        } else {
+            InAppNormal(
+                data: data ?? ["": ""],
+                isActive: $isShowing,
+                actionButtonLeft: actionButtonLeft,
+                actionButtonRight: actionButtonRight
+            )
         }
     }
     

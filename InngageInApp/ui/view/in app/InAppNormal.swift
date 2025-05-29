@@ -107,7 +107,7 @@ struct InAppNormal: View {
 
             HStack {
                 if btnLeftText != "" {
-                    if !btnLeftActionLink.isEmpty {
+                    if !btnLeftActionLink.isEmpty && btnLeftActionType == "inapp" {
                         Link(destination: URL(string: btnLeftActionLink)!, label: {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 20)
@@ -129,7 +129,7 @@ struct InAppNormal: View {
                     }
                 }
                 if btnRightText != "" {
-                    if !btnRightActionLink.isEmpty {
+                    if !btnRightActionLink.isEmpty && btnRightActionType == "inapp" {
                         Link(destination: URL(string: btnRightActionLink)!, label: {
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 20)
