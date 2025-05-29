@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name                  = "InngageInApp"
-  spec.version               = "1.0.0"
+  spec.version               = "1.0.1"
   spec.summary               = "A framework In App Message from Inngage"
   spec.homepage              = "https://inngage.readme.io/docs/ios-sdk#in-app-messages"
   spec.license               = { :type => 'MIT', :file => 'LICENSE' }
